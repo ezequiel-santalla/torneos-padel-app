@@ -1,0 +1,68 @@
+package com.eze_dev.torneos.service.implementations;
+
+import com.eze_dev.torneos.dto.create.PlayerCreateDto;
+import com.eze_dev.torneos.dto.response.PlayerResponseDto;
+import com.eze_dev.torneos.dto.update.PlayerUpdateDto;
+import com.eze_dev.torneos.mapper.PlayerMapper;
+import com.eze_dev.torneos.repository.PlayerRepository;
+import com.eze_dev.torneos.service.interfaces.IPlayerService;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
+
+
+@Service
+@RequiredArgsConstructor
+public class PlayerService implements IPlayerService {
+
+    private final PlayerRepository playerRepository;
+    private final PlayerMapper playerMapper;
+
+    @Override
+    public PlayerResponseDto create(PlayerCreateDto playerCreateDto) {
+        if (playerRepository.existsByDni(playerCreateDto.getDni())) {
+            throw new EntityExistsException("Player with DNI " + playerCreateDto.getDni() + " already exists.");
+        }
+
+        return playerMapper.toDto(playerRepository.save(playerMapper.toEntity(playerCreateDto)));
+    }
+
+    @Override
+    public List<PlayerResponseDto> getAll() {
+        return playerRepository.findAll()
+                .stream()
+                .map(playerMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public PlayerResponseDto getById(UUID id) {
+        return playerRepository.findById(id)
+                .map(playerMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("Player not found with ID: " + id));
+    }
+
+    @Override
+    public PlayerResponseDto update(UUID id, PlayerUpdateDto playerUpdateDto) {
+        return playerRepository.findById(id)
+                .map(existingPlayer -> {
+                    playerMapper.updateEntityFromDto(playerUpdateDto, existingPlayer);
+
+                    return playerMapper.toDto(playerRepository.save(existingPlayer));
+                })
+                .orElseThrow(() -> new EntityNotFoundException("Player not found with ID: " + id));
+    }
+
+    @Override
+    public void delete(UUID id) {
+        if (!playerRepository.existsById(id)) {
+            throw new EntityNotFoundException("Player not found with ID: " + id);
+        }
+
+        playerRepository.deleteById(id);
+    }
+}

@@ -1,0 +1,11 @@
+package com.eze_dev.torneos.service.interfaces;
+
+import com.eze_dev.torneos.dto.response.MatchResponseDto;
+import com.eze_dev.torneos.dto.update.MatchResultUpdateDto;
+
+import java.util.UUID;
+
+public interface IMatchService {
+
+    MatchResponseDto updateMatchResult(UUID id, MatchResultUpdateDto matchResultUpdateDto);
+}
