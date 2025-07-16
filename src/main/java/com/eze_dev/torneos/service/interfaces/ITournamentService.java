@@ -27,7 +27,6 @@ public interface ITournamentService {
     List<MatchResponseDto> getMatchesInTournament(UUID tournamentId);
 
     TournamentResponseDto tryFinalizeTournamentIfCompleted(UUID tournamentId);
-    TournamentResponseDto finalizeTournament(UUID tournamentId);
     List<PairStandingResponseDto> getStandings(UUID tournamentId);
 
     TournamentProgressResponseDto getProgress(UUID tournamentId);

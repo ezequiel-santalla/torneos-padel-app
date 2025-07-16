@@ -28,12 +28,8 @@ public class MatchService implements IMatchService {
 
     @Override
     @Transactional
-    public MatchResponseDto updateMatchResult(UUID matchId, MatchResultUpdateDto dto) {
+    public MatchResponseDto updateMatchResult(UUID tournamentId, UUID matchId, MatchResultUpdateDto dto) {
         Match match = getMatch(matchId);
-
-        if (match.getStatus() == MatchStatus.COMPLETED) {
-            throw new IllegalStateException("Cannot update result of a completed match.");
-        }
 
         match.setPair1Score(dto.getPair1Score());
         match.setPair2Score(dto.getPair2Score());

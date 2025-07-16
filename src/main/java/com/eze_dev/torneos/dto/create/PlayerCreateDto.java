@@ -1,6 +1,8 @@
 package com.eze_dev.torneos.dto.create;
 
+import com.eze_dev.torneos.types.GenderType;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +20,9 @@ public class PlayerCreateDto {
 
     @NotBlank(message = "Last name is required")
     private String lastName;
+
+    @NotNull(message = "Gender is required")
+    private GenderType genderType;
 
     @NotBlank(message = "DNI is required")
     @Size(min = 7, max = 15, message = "DNI must be between 7 and 15 characters")

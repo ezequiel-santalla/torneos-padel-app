@@ -2,6 +2,7 @@ package com.eze_dev.torneos.service.interfaces;
 
 import com.eze_dev.torneos.dto.create.PlayerCreateDto;
 import com.eze_dev.torneos.dto.response.PlayerResponseDto;
+import com.eze_dev.torneos.dto.response.PlayerStandingResponseDto;
 import com.eze_dev.torneos.dto.update.PlayerUpdateDto;
 
 import java.util.List;

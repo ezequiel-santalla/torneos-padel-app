@@ -1,8 +1,6 @@
 package com.eze_dev.torneos.model;
 
-import com.eze_dev.torneos.types.TournamentStatus;
-import com.eze_dev.torneos.types.TournamentType;
-import com.eze_dev.torneos.types.WinningMatchRuleType;
+import com.eze_dev.torneos.types.*;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -36,13 +34,24 @@ public class Tournament {
     @Column
     private LocalDateTime endDate;
 
+    @Column
+    private String address;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private WinningMatchRuleType winningMatchRule;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TournamentType type;
+    private TournamentType tournamentType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CategoryType categoryType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private GenderType genderType;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

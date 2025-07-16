@@ -1,5 +1,7 @@
 package com.eze_dev.torneos.dto.create;
 
+import com.eze_dev.torneos.types.CategoryType;
+import com.eze_dev.torneos.types.GenderType;
 import com.eze_dev.torneos.types.TournamentType;
 import com.eze_dev.torneos.types.WinningMatchRuleType;
 import jakarta.validation.constraints.NotBlank;
@@ -23,10 +25,22 @@ public class TournamentCreateDto {
     @NotNull(message = "Start date is required")
     private LocalDateTime startDate;
 
+    @NotNull(message = "End date is required")
+    private LocalDateTime endDate;
+
+    @NotBlank(message = "Address is required")
+    private String address;
+
     @NotNull(message = "Winning match rule is required")
     private WinningMatchRuleType winningMatchRule;
 
     @NotNull(message = "Tournament type is required")
-    private TournamentType type;
+    private TournamentType tournamentType;
+
+    @NotNull(message = "Category is required")
+    private CategoryType categoryType;
+
+    @NotNull(message = "Gender is required")
+    private GenderType genderType;
 }
 

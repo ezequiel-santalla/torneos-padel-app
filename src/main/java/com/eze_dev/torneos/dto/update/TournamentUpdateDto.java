@@ -1,5 +1,7 @@
 package com.eze_dev.torneos.dto.update;
 
+import com.eze_dev.torneos.types.CategoryType;
+import com.eze_dev.torneos.types.GenderType;
 import com.eze_dev.torneos.types.TournamentType;
 import com.eze_dev.torneos.types.WinningMatchRuleType;
 import jakarta.validation.constraints.NotBlank;
@@ -17,13 +19,19 @@ import java.time.LocalDateTime;
 @Builder
 public class TournamentUpdateDto {
 
-    @NotBlank
     private String name;
 
-    @NotNull
     private LocalDateTime startDate;
 
-    private TournamentType type;
+    private LocalDateTime endDate;
+
+    private String address;
+
+    private TournamentType tournamentType;
+
+    private GenderType genderType;
+
+    private CategoryType categoryType;
 
     private WinningMatchRuleType winningMatchRule;
 }

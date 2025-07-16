@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/tournaments/matches")
+@RequestMapping("/api/v1/tournaments/{tournamentId}/matches")
 @RequiredArgsConstructor
 public class MatchController {
 
     private final IMatchService matchService;
 
     @PutMapping("/{id}/result")
-    public ResponseEntity<MatchResponseDto> updateMatchResult(@PathVariable UUID id, @Valid @RequestBody MatchResultUpdateDto matchResultUpdateDto) {
-        return ResponseEntity.ok(matchService.updateMatchResult(id, matchResultUpdateDto));
+    public ResponseEntity<MatchResponseDto> updateMatchResult(@PathVariable UUID tournamentId, @PathVariable UUID id, @Valid @RequestBody MatchResultUpdateDto matchResultUpdateDto) {
+        return ResponseEntity.ok(matchService.updateMatchResult(tournamentId, id, matchResultUpdateDto));
     }
 }

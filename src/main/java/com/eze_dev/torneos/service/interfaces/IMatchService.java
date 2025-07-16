@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface IMatchService {
 
-    MatchResponseDto updateMatchResult(UUID id, MatchResultUpdateDto matchResultUpdateDto);
+    MatchResponseDto updateMatchResult(UUID tournamentId, UUID id, MatchResultUpdateDto matchResultUpdateDto);
 }

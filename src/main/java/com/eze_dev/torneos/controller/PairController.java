@@ -30,7 +30,6 @@ public class PairController {
     }
 
 
-
     @GetMapping("/{id}")
     public ResponseEntity<PairResponseDto> getPairById(@PathVariable UUID id) {
         return ResponseEntity.ok(pairService.getById(id));

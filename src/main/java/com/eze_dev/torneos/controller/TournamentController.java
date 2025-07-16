@@ -82,11 +82,6 @@ public class TournamentController {
         return ResponseEntity.ok(tournamentService.getMatchesInTournament(id));
     }
 
-    @PutMapping("/{id}/finalize")
-    public ResponseEntity<TournamentResponseDto> finalizeTournament(@PathVariable UUID id) {
-        return ResponseEntity.ok(tournamentService.finalizeTournament(id));
-    }
-
     @GetMapping("/{id}/standings")
     public ResponseEntity<List<PairStandingResponseDto>> getStandingsByTournament(@PathVariable UUID id) {
         return ResponseEntity.ok(tournamentService.getStandings(id));

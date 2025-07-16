@@ -1,8 +1,6 @@
 package com.eze_dev.torneos.dto.response;
 
-import com.eze_dev.torneos.types.TournamentStatus;
-import com.eze_dev.torneos.types.TournamentType;
-import com.eze_dev.torneos.types.WinningMatchRuleType;
+import com.eze_dev.torneos.types.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +20,10 @@ public class TournamentResponseDto {
     private String name;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private TournamentType type;
+    private String address;
+    private TournamentType tournamentType;
+    private CategoryType categoryType;
+    private GenderType genderType;
     private TournamentStatus status;
     private WinningMatchRuleType winningMatchRule;
 }

@@ -73,6 +73,7 @@ public class TournamentService implements ITournamentService {
         return tournamentRepository.findById(id)
                 .map(existingTournament -> {
                     tournamentMapper.updateEntityFromDto(tournamentUpdateDto, existingTournament);
+
                     return tournamentMapper.toDto(tournamentRepository.save(existingTournament));
                 })
                 .orElseThrow(() -> new EntityNotFoundException("Tournament not found with ID: " + id));
@@ -130,7 +131,7 @@ public class TournamentService implements ITournamentService {
             throw new IllegalStateException("Solo se puede iniciar un torneo que esté en estado CREATED.");
         }
 
-        TournamentStrategy strategy = tournamentStrategyFactory.getStrategy(tournament.getType());
+        TournamentStrategy strategy = tournamentStrategyFactory.getStrategy(tournament.getTournamentType());
 
         strategy.validateBeforeStart(tournament);
 
@@ -155,7 +156,7 @@ public class TournamentService implements ITournamentService {
         TournamentStatus newStatus = getTournamentStatus(tournamentStatusUpdateDto, tournament);
 
         if (newStatus == TournamentStatus.IN_PROGRESS) {
-            TournamentStrategy strategy = tournamentStrategyFactory.getStrategy(tournament.getType());
+            TournamentStrategy strategy = tournamentStrategyFactory.getStrategy(tournament.getTournamentType());
             strategy.validateBeforeStart(tournament);
 
             if (tournament.getMatches().isEmpty()) {
@@ -166,7 +167,8 @@ public class TournamentService implements ITournamentService {
 
         tournament.setStatus(newStatus);
 
-        if (newStatus == TournamentStatus.FINISHED) {
+        // Solo establecer fecha de finalización automáticamente si no existe una fecha manual
+        if (newStatus == TournamentStatus.FINISHED && tournament.getEndDate() == null) {
             tournament.setEndDate(LocalDateTime.now());
         }
 
@@ -198,41 +200,18 @@ public class TournamentService implements ITournamentService {
         }
 
         tournament.setStatus(TournamentStatus.FINISHED);
-        tournament.setEndDate(LocalDateTime.now());
+
+        if (tournament.getEndDate() == null) {
+            tournament.setEndDate(LocalDateTime.now());
+        }
 
         return tournamentMapper.toDto(tournamentRepository.save(tournament));
     }
 
     @Override
-    @Transactional
-    public TournamentResponseDto finalizeTournament(UUID tournamentId) {
-        Tournament tournament = tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new EntityNotFoundException("Tournament not found with ID: " + tournamentId));
-
-        if (tournament.getStatus() == TournamentStatus.FINISHED) {
-            return tournamentMapper.toDto(tournament);
-        }
-
-        boolean allMatchesCompleted = tournament.getMatches().stream()
-                .allMatch(match -> match.getStatus() == MatchStatus.COMPLETED);
-
-        if (!allMatchesCompleted) {
-            throw new IllegalStateException("Cannot finalize tournament: not all matches are completed.");
-        }
-
-        tournament.setStatus(TournamentStatus.FINISHED);
-        tournament.setEndDate(LocalDateTime.now());
-
-        Tournament updatedTournament = tournamentRepository.save(tournament);
-
-        return tournamentMapper.toDto(updatedTournament);
-    }
-
-
-    @Override
     public List<PairStandingResponseDto> getStandings(UUID tournamentId) {
         Tournament tournament = getTournamentOrThrow(tournamentId);
-        TournamentStrategy strategy = tournamentStrategyFactory.getStrategy(tournament.getType());
+        TournamentStrategy strategy = tournamentStrategyFactory.getStrategy(tournament.getTournamentType());
 
         List<PairStanding> standings = strategy.calculateStandings(tournament);
 

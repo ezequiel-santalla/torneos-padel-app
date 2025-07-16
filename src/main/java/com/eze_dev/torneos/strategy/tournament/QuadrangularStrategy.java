@@ -6,6 +6,7 @@ import com.eze_dev.torneos.model.Tournament;
 import com.eze_dev.torneos.types.MatchStatus;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,11 @@ public class QuadrangularStrategy implements TournamentStrategy {
         List<Pair> pairs = tournament.getPairs();
         List<Match> matches = new ArrayList<>();
 
+        LocalDateTime baseTime = tournament.getStartDate() != null
+                ? tournament.getStartDate().toLocalDate().atStartOfDay()
+                : LocalDateTime.now();
+
+        int matchIndex = 0;
         for (int i = 0; i < pairs.size(); i++) {
             for (int j = i + 1; j < pairs.size(); j++) {
                 matches.add(Match.builder()
@@ -31,7 +37,9 @@ public class QuadrangularStrategy implements TournamentStrategy {
                         .pair1(pairs.get(i))
                         .pair2(pairs.get(j))
                         .status(MatchStatus.PENDING)
+                        .scheduledDate(baseTime.plusHours(matchIndex))
                         .build());
+                matchIndex++;
             }
         }
         return matches;
@@ -40,6 +48,7 @@ public class QuadrangularStrategy implements TournamentStrategy {
     @Override
     public List<PairStanding> calculateStandings(Tournament tournament) {
         List<PairStanding> standings = new ArrayList<>();
+
         for (Pair pair : tournament.getPairs()) {
             standings.add(new PairStanding(pair, 0, 0, 0, 0, 0, 0));
         }
@@ -82,18 +91,41 @@ public class QuadrangularStrategy implements TournamentStrategy {
             return Integer.compare(diffB, diffA);
         });
 
-        for (int i = 0; i < standings.size(); i++) {
-            int points;
-            switch (i) {
-                case 0 -> points = 10;
-                case 1 -> points = 6;
-                case 2 -> points = 3;
-                default -> points = 1;
-            }
-            standings.get(i).setPoints(points);
-        }
+        boolean tournamentFinished = isTournamentFinished(tournament);
+
+        assignPoints(standings, tournamentFinished);
 
         return standings;
+    }
+
+    private boolean isTournamentFinished(Tournament tournament) {
+        List<Match> matches = tournament.getMatches();
+
+        if (matches.isEmpty()) {
+            return false;
+        }
+
+        return matches.stream()
+                .allMatch(match -> match.getStatus() == MatchStatus.COMPLETED);
+    }
+
+    private void assignPoints(List<PairStanding> standings, boolean tournamentFinished) {
+        for (int i = 0; i < standings.size(); i++) {
+            int points;
+
+            if (tournamentFinished) {
+                points = switch (i) {
+                    case 0 -> 10;
+                    case 1 -> 6;
+                    case 2 -> 3;
+                    default -> 1;
+                };
+            } else {
+                points = 0;
+            }
+
+            standings.get(i).setPoints(points);
+        }
     }
 
     private PairStanding findStandingByPair(List<PairStanding> standings, Pair pair) {

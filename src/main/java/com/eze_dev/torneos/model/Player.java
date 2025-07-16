@@ -1,5 +1,6 @@
 package com.eze_dev.torneos.model;
 
+import com.eze_dev.torneos.types.GenderType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -26,6 +27,9 @@ public class Player {
 
     @Column(nullable = false)
     private String lastName;
+
+    @Column(nullable = false)
+    private GenderType genderType;
 
     @Column(nullable = false, unique = true)
     private String dni;
