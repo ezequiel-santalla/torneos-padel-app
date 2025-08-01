@@ -5,6 +5,7 @@ import com.eze_dev.torneos.dto.response.*;
 import com.eze_dev.torneos.dto.update.TournamentStatusUpdateDto;
 import com.eze_dev.torneos.dto.update.TournamentUpdateDto;
 import com.eze_dev.torneos.types.TournamentStatus;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
@@ -33,4 +34,6 @@ public interface ITournamentService {
 
     List<TournamentSummaryResponseDto> getSummary();
     TournamentStatus getStatus(UUID tournamentId);
+
+    PaginatedResponseDto<TournamentResponseDto> getAllPaginated(Pageable pageable);
 }

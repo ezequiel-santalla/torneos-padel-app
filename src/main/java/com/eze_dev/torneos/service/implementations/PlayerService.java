@@ -1,14 +1,18 @@
 package com.eze_dev.torneos.service.implementations;
 
 import com.eze_dev.torneos.dto.create.PlayerCreateDto;
+import com.eze_dev.torneos.dto.response.PaginatedResponseDto;
 import com.eze_dev.torneos.dto.response.PlayerResponseDto;
 import com.eze_dev.torneos.dto.update.PlayerUpdateDto;
 import com.eze_dev.torneos.mapper.PlayerMapper;
+import com.eze_dev.torneos.model.Player;
 import com.eze_dev.torneos.repository.PlayerRepository;
 import com.eze_dev.torneos.service.interfaces.IPlayerService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,5 +67,17 @@ public class PlayerService implements IPlayerService {
         }
 
         playerRepository.deleteById(id);
+    }
+
+    @Override
+    public PaginatedResponseDto<PlayerResponseDto> getAllPaginated(Pageable pageable) {
+        Page<Player> playersPage = playerRepository.findAll(pageable);
+
+        List<PlayerResponseDto> players = playersPage.getContent()
+                .stream()
+                .map(playerMapper::toDto)
+                .toList();
+
+        return new PaginatedResponseDto<>(players, playersPage);
     }
 }

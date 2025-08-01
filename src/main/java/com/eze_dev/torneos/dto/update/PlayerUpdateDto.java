@@ -1,8 +1,6 @@
 package com.eze_dev.torneos.dto.update;
 
 import com.eze_dev.torneos.types.GenderType;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

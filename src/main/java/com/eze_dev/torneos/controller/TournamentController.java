@@ -8,6 +8,8 @@ import com.eze_dev.torneos.service.interfaces.ITournamentService;
 import com.eze_dev.torneos.types.TournamentStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +29,8 @@ public class TournamentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TournamentResponseDto>> getAllTournaments() {
-        return ResponseEntity.ok(tournamentService.getAll());
+    public ResponseEntity<PaginatedResponseDto<TournamentResponseDto>> getAllTournamentsPaginated(@PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(tournamentService.getAllPaginated(pageable));
     }
 
     @GetMapping("/{id}")

@@ -21,11 +21,10 @@ public class PlayerRankingController {
     private final IPlayerStandingService playerStandingService;
 
     @GetMapping
-    public ResponseEntity<List<PlayerRankingResponseDto>> getPlayerRankings(
+    public ResponseEntity<List<PlayerRankingResponseDto>> getPlayerRankingsPaginated(
             @RequestParam(required = false) CategoryType category,
             @RequestParam(required = false) GenderType gender) {
 
-        List<PlayerRankingResponseDto> rankings = playerStandingService.getPlayerRankings(category, gender);
-        return ResponseEntity.ok(rankings);
+        return ResponseEntity.ok(playerStandingService.getPlayerRankings(category, gender));
     }
 }

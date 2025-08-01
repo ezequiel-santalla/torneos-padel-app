@@ -1,15 +1,17 @@
 package com.eze_dev.torneos.controller;
 
 import com.eze_dev.torneos.dto.create.PlayerCreateDto;
+import com.eze_dev.torneos.dto.response.PaginatedResponseDto;
 import com.eze_dev.torneos.dto.response.PlayerResponseDto;
 import com.eze_dev.torneos.dto.update.PlayerUpdateDto;
 import com.eze_dev.torneos.service.interfaces.IPlayerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,8 +27,8 @@ public class PlayerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PlayerResponseDto>> getAllPlayers() {
-        return ResponseEntity.ok(playerService.getAll());
+    public ResponseEntity<PaginatedResponseDto<PlayerResponseDto>> getAllPlayersPaginated(@PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(playerService.getAllPaginated(pageable));
     }
 
     @GetMapping("/{id}")

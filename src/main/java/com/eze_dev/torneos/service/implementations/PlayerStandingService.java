@@ -1,5 +1,6 @@
 package com.eze_dev.torneos.service.implementations;
 
+import com.eze_dev.torneos.dto.response.PaginatedResponseDto;
 import com.eze_dev.torneos.dto.response.PlayerRankingResponseDto;
 import com.eze_dev.torneos.dto.response.PlayerStandingResponseDto;
 import com.eze_dev.torneos.dto.response.PlayerSummaryResponseDto;
@@ -16,6 +17,8 @@ import com.eze_dev.torneos.types.CategoryType;
 import com.eze_dev.torneos.types.GenderType;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -113,6 +116,19 @@ public class PlayerStandingService implements IPlayerStandingService {
                 .map(player -> getPlayerPointsRanking(player.getId(), category, gender))
                 .sorted((p1, p2) -> Integer.compare(p2.getTotalPoints(), p1.getTotalPoints()))
                 .toList();
+    }
+
+    @Override
+    public PaginatedResponseDto<PlayerRankingResponseDto> getPlayerRankingsPaginated(CategoryType category, GenderType gender, Pageable pageable) {
+        Page<Player> rankingsPage = playerRepository.findPlayersWhoPlayedInCategoryAndGender(category, gender, pageable);
+
+        List<PlayerRankingResponseDto> rankings = rankingsPage.getContent()
+                .stream()
+                .map(ranking -> getPlayerPointsRanking(ranking.getId(), category, gender))
+                .sorted((p1, p2) -> Integer.compare(p2.getTotalPoints(), p1.getTotalPoints()))
+                .toList();
+
+        return new PaginatedResponseDto<>(rankings, rankingsPage);
     }
 
     private boolean hasPlayedInCategoryAndGender(UUID playerId, CategoryType category, GenderType gender) {

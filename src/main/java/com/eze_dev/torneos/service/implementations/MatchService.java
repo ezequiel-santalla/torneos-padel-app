@@ -39,7 +39,7 @@ public class MatchService implements IMatchService {
         log.info("Match {} updated and marked as COMPLETED", matchId);
 
         try {
-            TournamentResponseDto tournamentDto = tournamentService.tryFinalizeTournamentIfCompleted(match.getTournament().getId());
+            tournamentService.tryFinalizeTournamentIfCompleted(match.getTournament().getId());
             log.info("Tournament {} finalized automatically after match update", match.getTournament().getId());
         } catch (Exception e) {
             log.warn("Failed to finalize tournament {} automatically: {}", match.getTournament().getId(), e.getMessage());

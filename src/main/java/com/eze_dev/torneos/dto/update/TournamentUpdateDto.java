@@ -4,8 +4,6 @@ import com.eze_dev.torneos.types.CategoryType;
 import com.eze_dev.torneos.types.GenderType;
 import com.eze_dev.torneos.types.TournamentType;
 import com.eze_dev.torneos.types.WinningMatchRuleType;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
